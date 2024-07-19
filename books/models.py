@@ -5,8 +5,13 @@ from publishers.models import Publisher
 from authors.models import Author
 import uuid
 
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
+from django.conf import settings
 
-# Create your models here.
+
 class BookTitle(models.Model):
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(blank=True)
@@ -39,7 +44,15 @@ class Book(models.Model):
         if not self.book_id:
             self.book_id = str(uuid.uuid4().replace('-', '')[:24].lower())
 
-        # generate QR code
+            # generate QR code
+            qrcode_img = qrcode.make(self.book_id)
+            canvas = Image.new('RGB', (290, 290), 'white')
+            draw = ImageDraw.Draw(canvas)
+            canvas.paste(qrcode_img)
+            fname = f'qr_code-{self.title}.png'
+            buffer = BytesIO()
+            canvas.save(buffer, 'PNG')
+            self.qr_code.save(fname, File(buffer), save=False)
+            canvas.close()
 
         return super().save(*args, **kwargs)
-
