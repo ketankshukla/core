@@ -42,7 +42,13 @@ class Book(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.book_id:
-            self.book_id = str(uuid.uuid4().replace('-', '')[:24].lower())
+            # make the self.book.id 24 characters
+
+            self.book_id = uuid.uuid4().hex[:24].lower()
+
+            #  self.book_id = str(uuid.uuid4().hex[:24].lower())
+
+            # self.book_id = str(uuid.uuid4().('-', '')[:24].lower())
 
             # generate QR code
             qrcode_img = qrcode.make(self.book_id)
