@@ -1,0 +1,11 @@
+﻿# Ignore PyCharm project files
+.idea/
+
+# Ignore Python bytecode files
+__pycache__/
+
+# Ignore virtual environment
+.venv/
+
+# Ignore SQLite database file
+db.sqlite3
